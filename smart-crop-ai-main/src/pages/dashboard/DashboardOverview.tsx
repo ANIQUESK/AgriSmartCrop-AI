@@ -1,6 +1,8 @@
+import FloatingAgriChatbot from "@/components/FloatingAgriChatbot";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+
 import {
 Sprout,
 Microscope,
@@ -110,10 +112,12 @@ const {data:cropCount}=useQuery({
 queryKey:["crop-count"],
 queryFn:async()=>{
 
+if(!user) return 0;
+
 const {count}=await supabase
 .from("crop_recommendations")
 .select("*",{count:"exact",head:true})
-.eq("user_id",user!.id);
+.eq("user_id",user.id);
 
 return count || 0;
 
@@ -125,10 +129,12 @@ const {data:diseaseCount}=useQuery({
 queryKey:["disease-count"],
 queryFn:async()=>{
 
+if(!user) return 0;
+
 const {count}=await supabase
 .from("disease_reports")
 .select("*",{count:"exact",head:true})
-.eq("user_id",user!.id);
+.eq("user_id",user.id);
 
 return count || 0;
 
@@ -140,10 +146,12 @@ const {data:yieldCount}=useQuery({
 queryKey:["yield-count"],
 queryFn:async()=>{
 
+if(!user) return 0;
+
 const {count}=await supabase
 .from("yield_predictions")
 .select("*",{count:"exact",head:true})
-.eq("user_id",user!.id);
+.eq("user_id",user.id);
 
 return count || 0;
 
@@ -189,65 +197,64 @@ color:"text-[#B7410E]"
 
 return(
 
+<>
 <div className="space-y-6">
 
 {/* Welcome Banner */}
 
 <div className="bg-[#5C3A21] rounded-2xl p-6 lg:p-8 text-white relative overflow-hidden">
 
-  {/* Background Leaf Icon */}
-  <div className="absolute right-0 top-0 w-64 h-full opacity-10 flex items-center justify-end pr-8">
-    <Leaf className="w-48 h-48" />
-  </div>
+<div className="absolute right-0 top-0 w-64 h-full opacity-10 flex items-center justify-end pr-8">
+<Leaf className="w-48 h-48"/>
+</div>
 
-  <div className="relative z-10">
+<div className="relative z-10">
 
-    {/* Platform Badge */}
-    <Badge className="bg-white/20 text-white border-white/30 mb-3">
-      🌱 SmartCrop AI Platform
-    </Badge>
+<Badge className="bg-white/20 text-white border-white/30 mb-3">
+🌱 SmartCrop AI Platform
+</Badge>
 
-    {/* Greeting */}
-    <h2 className="text-2xl lg:text-3xl font-bold mb-2">
-      Good {new Date().getHours() < 12
-        ? "morning"
-        : new Date().getHours() < 18
-        ? "afternoon"
-        : "evening"}, {name.split(" ")[0]}!
-    </h2>
+<h2 className="text-2xl lg:text-3xl font-bold mb-2">
+Good {new Date().getHours() < 12
+? "morning"
+: new Date().getHours() < 18
+? "afternoon"
+: "evening"}, {name.split(" ")[0]}!
+</h2>
 
-    <p className="text-white/80 mb-4 max-w-lg">
-      Your AI powered farm advisor is ready.
-    </p>
+<p className="text-white/80 mb-4 max-w-lg">
+Your AI powered farm advisor is ready.
+</p>
 
-    {/* Buttons */}
-    <div className="flex gap-3 flex-wrap">
+<div className="flex gap-3 flex-wrap">
 
-      {/* Primary Button */}
-      <Button
-        asChild
-        className="bg-[#B7410E] hover:bg-[#8f330a] text-white font-semibold shadow"
-      >
-        <Link to="/dashboard/crop-recommendation">
-          <Sprout className="w-4 h-4 mr-2" />
-          Analyze Soil
-        </Link>
-      </Button>
+<Button
+asChild
+className="bg-[#B7410E] hover:bg-[#8f330a] text-white font-semibold shadow"
+>
 
-      {/* Secondary Button (FIXED VISIBILITY) */}
-      <Button
-        asChild
-        className="bg-[#F4E6C8] text-[#5C3A21] hover:bg-[#DBCEA5] border border-[#5C3A21]/30 font-semibold"
-      >
-        <Link to="/dashboard/disease-detection">
-          <Microscope className="w-4 h-4 mr-2" />
-          Scan Leaf
-        </Link>
-      </Button>
+<Link to="/dashboard/crop-recommendation">
+<Sprout className="w-4 h-4 mr-2"/>
+Analyze Soil
+</Link>
 
-    </div>
+</Button>
 
-  </div>
+<Button
+asChild
+className="bg-[#F4E6C8] text-[#5C3A21] hover:bg-[#DBCEA5] border border-[#5C3A21]/30 font-semibold"
+>
+
+<Link to="/dashboard/disease-detection">
+<Microscope className="w-4 h-4 mr-2"/>
+Scan Leaf
+</Link>
+
+</Button>
+
+</div>
+
+</div>
 
 </div>
 
@@ -264,29 +271,21 @@ return(
 <div className="flex items-center justify-between mb-3">
 
 <div className="w-9 h-9 rounded-lg bg-[#DBCEA5] flex items-center justify-center">
-
 <stat.icon className={`w-5 h-5 ${stat.color}`}/>
-
 </div>
 
 <span className="text-xs font-semibold text-[#6B8E23]">
-
 {stat.change}
-
 </span>
 
 </div>
 
 <div className="text-2xl font-bold text-[#2E2E2E]">
-
 {stat.value}
-
 </div>
 
 <div className="text-xs text-[#5C3A21] mt-1">
-
 {stat.label}
-
 </div>
 
 </CardContent>
@@ -297,91 +296,12 @@ return(
 
 </div>
 
-{/* Yield Chart */}
-
-<Card className="bg-[#F4E6C8] border-[#5C3A21]/20">
-
-<CardContent className="p-5">
-
-<div className="flex items-center justify-between mb-4">
-
-<div>
-
-<h3 className="font-bold text-[#2E2E2E]">
-
-Yield Performance Trend
-
-</h3>
-
-<p className="text-sm text-[#5C3A21]">
-
-Simulated data · kg/hectare
-
-</p>
-
-</div>
-
-<Badge className="bg-[#DBCEA5] text-[#B7410E] border-[#B7410E]/20">
-
-2025
-
-</Badge>
-
-</div>
-
-<ResponsiveContainer width="100%" height={180}>
-
-<AreaChart data={mockYieldTrend}>
-
-<defs>
-
-<linearGradient id="yieldGradient" x1="0" y1="0" x2="0" y2="1">
-
-<stop offset="5%" stopColor="#B7410E" stopOpacity={0.35}/>
-
-<stop offset="95%" stopColor="#B7410E" stopOpacity={0}/>
-
-</linearGradient>
-
-</defs>
-
-<XAxis dataKey="month" tick={{fontSize:11}} axisLine={false} tickLine={false}/>
-
-<YAxis tick={{fontSize:11}} axisLine={false} tickLine={false}/>
-
-<Tooltip
-contentStyle={{
-borderRadius:"12px",
-border:"1px solid #5C3A21",
-background:"#F4E6C8"
-}}
-formatter={(v)=>[` ${v} kg/ha`,"Yield"]}
-/>
-
-<Area
-type="monotone"
-dataKey="yield"
-stroke="#B7410E"
-strokeWidth={2}
-fill="url(#yieldGradient)"
-/>
-
-</AreaChart>
-
-</ResponsiveContainer>
-
-</CardContent>
-
-</Card>
-
 {/* Modules */}
 
 <div>
 
 <h3 className="font-bold text-lg text-[#2E2E2E] mb-4">
-
 AI Modules
-
 </h3>
 
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -397,41 +317,28 @@ AI Modules
 <div className="flex items-start justify-between mb-3">
 
 <div className={`w-11 h-11 rounded-xl ${mod.color} flex items-center justify-center`}>
-
 <mod.icon className="w-6 h-6 text-white"/>
-
 </div>
 
 {mod.badge &&(
-
 <Badge className="bg-[#DBCEA5] text-[#B7410E] border-[#B7410E]/20 text-[10px]">
-
 {mod.badge}
-
 </Badge>
-
 )}
 
 </div>
 
 <h4 className="font-bold text-[#2E2E2E] mb-1">
-
 {mod.label}
-
 </h4>
 
 <p className="text-xs text-[#5C3A21] mb-3">
-
 {mod.desc}
-
 </p>
 
-<div className="flex items-center text-[#B7410E] text-xs font-semibold group-hover:gap-2 gap-1 transition-all">
-
+<div className="flex items-center text-[#B7410E] text-xs font-semibold">
 Open Module
-
-<ArrowRight className="w-3.5 h-3.5"/>
-
+<ArrowRight className="w-3.5 h-3.5 ml-1"/>
 </div>
 
 </CardContent>
@@ -447,6 +354,12 @@ Open Module
 </div>
 
 </div>
+
+{/* Floating Chatbot */}
+
+<FloatingAgriChatbot/>
+
+</>
 
 );
 

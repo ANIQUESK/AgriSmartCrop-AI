@@ -1,3 +1,4 @@
+import FloatingAgriChatbot from "@/components/FloatingAgriChatbot";
 import { useState, useEffect, useRef } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
