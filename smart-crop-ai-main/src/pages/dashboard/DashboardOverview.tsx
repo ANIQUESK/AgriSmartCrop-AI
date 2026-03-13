@@ -20,27 +20,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-import {
-ResponsiveContainer,
-AreaChart,
-Area,
-XAxis,
-YAxis,
-Tooltip
-} from "recharts";
-
-const mockYieldTrend = [
-{ month:"Jan", yield:2100 },
-{ month:"Feb", yield:2400 },
-{ month:"Mar", yield:2200 },
-{ month:"Apr", yield:2800 },
-{ month:"May", yield:3100 },
-{ month:"Jun", yield:2900 },
-{ month:"Jul", yield:3400 },
-{ month:"Aug", yield:3200 },
-{ month:"Sep", yield:3600 }
-];
-
 const modules = [
 
 {
@@ -198,28 +177,35 @@ color:"text-[#B7410E]"
 return(
 
 <>
+
 <div className="space-y-6">
 
-{/* Welcome Banner */}
+{/* HERO SECTION */}
 
-<div className="bg-[#5C3A21] rounded-2xl p-6 lg:p-8 text-white relative overflow-hidden">
+<div className="relative rounded-2xl overflow-hidden p-6 lg:p-8 text-white bg-gradient-to-r from-[#5C3A21] via-[#7A4B2A] to-[#5C3A21] animate-gradientMove">
 
-<div className="absolute right-0 top-0 w-64 h-full opacity-10 flex items-center justify-end pr-8">
+{/* Animated highlight */}
+<div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15),transparent_40%)]"/>
+
+{/* Floating Leaf */}
+<div className="absolute right-10 top-6 opacity-10 animate-floatLeaf">
 <Leaf className="w-48 h-48"/>
 </div>
 
 <div className="relative z-10">
 
-<Badge className="bg-white/20 text-white border-white/30 mb-3">
-🌱 SmartCrop AI Platform
+<Badge className="bg-white/20 backdrop-blur border-white/30 text-white mb-3 animate-glow">
+🌱 Krushi Mitra Platform
 </Badge>
 
 <h2 className="text-2xl lg:text-3xl font-bold mb-2">
+
 Good {new Date().getHours() < 12
 ? "morning"
 : new Date().getHours() < 18
 ? "afternoon"
 : "evening"}, {name.split(" ")[0]}!
+
 </h2>
 
 <p className="text-white/80 mb-4 max-w-lg">
@@ -230,7 +216,7 @@ Your AI powered farm advisor is ready.
 
 <Button
 asChild
-className="bg-[#B7410E] hover:bg-[#8f330a] text-white font-semibold shadow"
+className="bg-[#B7410E] hover:bg-[#8f330a] text-white font-semibold shadow-lg hover:scale-105 transition"
 >
 
 <Link to="/dashboard/crop-recommendation">
@@ -242,7 +228,7 @@ Analyze Soil
 
 <Button
 asChild
-className="bg-[#F4E6C8] text-[#5C3A21] hover:bg-[#DBCEA5] border border-[#5C3A21]/30 font-semibold"
+className="bg-[#F4E6C8] text-[#5C3A21] hover:bg-[#DBCEA5] border border-[#5C3A21]/30 font-semibold hover:scale-105 transition"
 >
 
 <Link to="/dashboard/disease-detection">
@@ -258,13 +244,13 @@ Scan Leaf
 
 </div>
 
-{/* Stats */}
+{/* STATS */}
 
 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
 
 {stats.map(stat=>(
 
-<Card key={stat.label} className="bg-[#F4E6C8] border-[#5C3A21]/20">
+<Card key={stat.label} className="bg-[#F4E6C8] border-[#5C3A21]/20 hover:shadow-lg transition">
 
 <CardContent className="p-4">
 
@@ -296,7 +282,7 @@ Scan Leaf
 
 </div>
 
-{/* Modules */}
+{/* MODULES */}
 
 <div>
 
@@ -310,7 +296,7 @@ AI Modules
 
 <Link key={mod.path} to={mod.path} className="group">
 
-<Card className="bg-[#F4E6C8] border-[#5C3A21]/20 hover:shadow-lg hover:-translate-y-1 transition-all">
+<Card className="bg-[#F4E6C8] border-[#5C3A21]/20 hover:shadow-xl hover:-translate-y-1 transition-all">
 
 <CardContent className="p-5">
 
@@ -321,9 +307,11 @@ AI Modules
 </div>
 
 {mod.badge &&(
+
 <Badge className="bg-[#DBCEA5] text-[#B7410E] border-[#B7410E]/20 text-[10px]">
 {mod.badge}
 </Badge>
+
 )}
 
 </div>
@@ -336,9 +324,11 @@ AI Modules
 {mod.desc}
 </p>
 
-<div className="flex items-center text-[#B7410E] text-xs font-semibold">
+<div className="flex items-center text-[#B7410E] text-xs font-semibold group-hover:gap-2 gap-1 transition-all">
+
 Open Module
-<ArrowRight className="w-3.5 h-3.5 ml-1"/>
+<ArrowRight className="w-3.5 h-3.5"/>
+
 </div>
 
 </CardContent>
@@ -355,7 +345,7 @@ Open Module
 
 </div>
 
-{/* Floating Chatbot */}
+{/* FLOATING CHATBOT */}
 
 <FloatingAgriChatbot/>
 

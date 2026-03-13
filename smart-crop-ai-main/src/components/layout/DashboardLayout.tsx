@@ -148,7 +148,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 
         {!collapsed && (
           <div>
-            <div className="font-bold text-white">SmartCrop AI</div>
+            <div className="font-bold text-white">Krushi Mitra</div>
             <div className="text-xs text-gray-400">Agri Intelligence</div>
           </div>
         )}

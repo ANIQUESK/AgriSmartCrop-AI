@@ -128,28 +128,31 @@ const Auth = () => {
 
           {/* Logo Container */}
 
-          <div className="relative">
+            <div className="relative flex items-center justify-center">
 
-            <div className="absolute inset-0 bg-[#B7410E] blur-xl opacity-40 rounded-2xl group-hover:opacity-60 transition"></div>
+              {/* Glow Effect */}
+              <div className="absolute inset-0 bg-[#B7410E] blur-xl opacity-40 rounded-2xl group-hover:opacity-60 transition"></div>
 
-            <div className="relative w-14 h-14 bg-gradient-to-br from-[#B7410E] to-[#8B2F0B] rounded-2xl flex items-center justify-center shadow-xl border border-white/20 p-2">
+              {/* Logo Box */}
+              <div className="relative w-20 h-20 rounded-2xl bg-white/10 border border-white/20 shadow-xl flex items-center justify-center overflow-hidden">
 
-              <img
-                src="/a.png"
-                alt="SmartCrop AI Logo"
-                className="w-full h-full object-contain"
-              />
+                <img
+                  src="/a.png"
+                  alt="SmartCrop AI Logo"
+                  className="w-15 h-15 object-contain"
+                  draggable={false}
+                />
+
+              </div>
 
             </div>
-
-          </div>
 
           {/* Title */}
 
           <div>
 
             <h1 className="text-3xl font-extrabold tracking-wide bg-gradient-to-r from-white to-[#DBCEA5] bg-clip-text text-transparent">
-              SmartCrop AI
+              Krushi Mitra
             </h1>
 
             <p className="text-white/70 text-sm tracking-wide">
@@ -218,7 +221,7 @@ const Auth = () => {
               </div>
 
               <span className="text-xl font-bold text-[#2E2E2E]">
-                SmartCrop AI
+                Krushi Mitra
               </span>
 
             </div>
