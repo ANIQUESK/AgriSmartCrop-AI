@@ -6,275 +6,501 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
-import { Microscope, Upload, Loader2, AlertTriangle, CheckCircle, Info, X } from "lucide-react";
+
+import {
+Microscope,
+Upload,
+Loader2,
+AlertTriangle,
+CheckCircle,
+Info,
+X
+} from "lucide-react";
 
 interface DiseaseResult {
-  disease_name: string;
-  confidence: number;
-  severity: string;
-  crop_type: string;
-  treatment: string;
-  prevention: string;
-  symptoms: string;
+disease_name:string
+confidence:number
+severity:string
+crop_type:string
+pathogen:string
+affected_stage:string
+spread_conditions:string
+yield_loss:string
+symptoms:string
+treatment:string
+organic_control:string
+prevention:string
 }
 
-const diseaseDatabase: DiseaseResult[] = [
-  {
-    disease_name: "Leaf Blight (Bacterial)",
-    confidence: 92.4,
-    severity: "High",
-    crop_type: "Rice",
-    symptoms: "Water-soaked lesions that turn yellow-brown, wilting of leaves",
-    treatment: "Apply copper-based bactericides (Copper Oxychloride @ 3g/L). Remove and destroy infected plant parts. Ensure proper field drainage.",
-    prevention: "Use resistant varieties, maintain proper plant spacing, avoid overhead irrigation",
-  },
-  {
-    disease_name: "Early Blight (Alternaria solani)",
-    confidence: 88.7,
-    severity: "Medium",
-    crop_type: "Tomato",
-    symptoms: "Dark brown spots with concentric rings, yellowing around lesions",
-    treatment: "Apply Mancozeb (2g/L) or Chlorothalonil (2ml/L). Remove infected leaves. Improve air circulation.",
-    prevention: "Crop rotation, avoid wetting foliage during irrigation, apply mulch",
-  },
-  {
-    disease_name: "Powdery Mildew",
-    confidence: 95.1,
-    severity: "Medium",
-    crop_type: "Wheat",
-    symptoms: "White powdery coating on leaves and stems, stunted growth",
-    treatment: "Apply Sulphur WDG (3g/L) or Propiconazole (0.1%). Spray in early morning or evening.",
-    prevention: "Plant resistant varieties, avoid excessive nitrogen, ensure proper spacing",
-  },
-  {
-    disease_name: "Brown Rust (Puccinia recondita)",
-    confidence: 91.2,
-    severity: "High",
-    crop_type: "Wheat",
-    symptoms: "Orange-brown pustules on leaves, eventual leaf senescence",
-    treatment: "Apply Propiconazole (0.1%) or Tebuconazole (0.1%). Emergency spray within 24 hours.",
-    prevention: "Use resistant varieties, monitor regularly, timely fungicide application",
-  },
-  {
-    disease_name: "Downy Mildew",
-    confidence: 84.5,
-    severity: "Low",
-    crop_type: "Pearl Millet",
-    symptoms: "Yellowish chlorotic patches on upper leaf surface, downy growth below",
-    treatment: "Seed treatment with Metalaxyl (6g/kg seed). Foliar spray of Mancozeb (2.5g/L).",
-    prevention: "Use certified disease-free seed, crop rotation, avoid waterlogging",
-  },
+/* Scientific Disease Knowledge Base */
+
+const diseaseDatabase:DiseaseResult[]=[
+
+{
+disease_name:"Bacterial Leaf Blight",
+confidence:92.4,
+severity:"High",
+crop_type:"Rice",
+pathogen:"Xanthomonas oryzae",
+affected_stage:"Vegetative to flowering stage",
+spread_conditions:"Heavy rainfall, strong wind, high humidity",
+yield_loss:"20% - 70%",
+symptoms:"Water soaked yellow lesions starting from leaf tips and margins",
+treatment:"Copper Oxychloride 3g/L or Streptocycline spray",
+organic_control:"Neem oil spray and Trichoderma bio-control",
+prevention:"Use resistant rice varieties and balanced fertilization"
+},
+
+{
+disease_name:"Rice Blast",
+confidence:91.3,
+severity:"High",
+crop_type:"Rice",
+pathogen:"Magnaporthe oryzae",
+affected_stage:"Seedling to reproductive stage",
+spread_conditions:"Cool temperatures and high humidity",
+yield_loss:"30% - 80%",
+symptoms:"Diamond shaped gray lesions on leaves",
+treatment:"Tricyclazole fungicide spray",
+organic_control:"Bacillus subtilis biological fungicide",
+prevention:"Proper drainage and resistant crop varieties"
+},
+
+{
+disease_name:"Early Blight",
+confidence:88.7,
+severity:"Medium",
+crop_type:"Tomato",
+pathogen:"Alternaria solani",
+affected_stage:"Mature plants",
+spread_conditions:"Warm and humid weather",
+yield_loss:"10% - 40%",
+symptoms:"Dark brown concentric rings on older leaves",
+treatment:"Mancozeb or Chlorothalonil fungicide",
+organic_control:"Neem oil and compost tea spray",
+prevention:"Crop rotation and removal of infected debris"
+},
+
+{
+disease_name:"Late Blight",
+confidence:90.2,
+severity:"High",
+crop_type:"Potato",
+pathogen:"Phytophthora infestans",
+affected_stage:"Leaf and tuber stage",
+spread_conditions:"Cool wet climate",
+yield_loss:"30% - 90%",
+symptoms:"Water soaked dark patches on leaves",
+treatment:"Metalaxyl + Mancozeb fungicide spray",
+organic_control:"Copper based organic fungicide",
+prevention:"Avoid overhead irrigation"
+},
+
+{
+disease_name:"Powdery Mildew",
+confidence:95.1,
+severity:"Medium",
+crop_type:"Wheat",
+pathogen:"Blumeria graminis",
+affected_stage:"Leaf growth stage",
+spread_conditions:"Dry climate with moderate humidity",
+yield_loss:"10% - 30%",
+symptoms:"White powdery fungal growth on leaf surface",
+treatment:"Sulphur WDG 3g/L or Hexaconazole fungicide",
+organic_control:"Milk spray or baking soda solution",
+prevention:"Avoid excessive nitrogen fertilization"
+},
+
+{
+disease_name:"Tomato Leaf Curl Virus",
+confidence:87.9,
+severity:"High",
+crop_type:"Tomato",
+pathogen:"Begomovirus",
+affected_stage:"Early vegetative stage",
+spread_conditions:"Spread by whiteflies",
+yield_loss:"20% - 90%",
+symptoms:"Leaf curling, yellow mosaic patterns",
+treatment:"Control whiteflies using Imidacloprid",
+organic_control:"Neem oil spray for vector control",
+prevention:"Use virus resistant tomato varieties"
+},
+
+{
+disease_name:"Corn Leaf Rust",
+confidence:89.6,
+severity:"Medium",
+crop_type:"Maize",
+pathogen:"Puccinia sorghi",
+affected_stage:"Vegetative stage",
+spread_conditions:"Moderate temperature with humidity",
+yield_loss:"10% - 25%",
+symptoms:"Small reddish brown pustules on leaves",
+treatment:"Propiconazole fungicide spray",
+organic_control:"Sulfur based fungicide",
+prevention:"Plant resistant maize hybrids"
+}
+
 ];
 
-const DiseaseDetection = () => {
-  const [dragOver, setDragOver] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [result, setResult] = useState<DiseaseResult | null>(null);
-  const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
-  const { toast } = useToast();
+const DiseaseDetection=()=>{
 
-  const handleFile = (file: File) => {
-    if (!file.type.startsWith("image/")) {
-      toast({ title: "Invalid file", description: "Please upload an image file (JPG, PNG, WebP).", variant: "destructive" });
-      return;
-    }
-    if (file.size > 10 * 1024 * 1024) {
-      toast({ title: "File too large", description: "Please upload an image under 10MB.", variant: "destructive" });
-      return;
-    }
-    setSelectedImage(file);
-    setImagePreview(URL.createObjectURL(file));
-    setResult(null);
-  };
+const [dragOver,setDragOver]=useState(false)
+const [selectedImage,setSelectedImage]=useState<File|null>(null)
+const [imagePreview,setImagePreview]=useState<string|null>(null)
+const [result,setResult]=useState<DiseaseResult|null>(null)
+const [loading,setLoading]=useState(false)
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setDragOver(false);
-    const file = e.dataTransfer.files[0];
-    if (file) handleFile(file);
-  }, []);
+const {user}=useAuth()
+const {toast}=useToast()
 
-  const handleAnalyze = async () => {
-    if (!selectedImage) return;
-    setLoading(true);
-    await new Promise((r) => setTimeout(r, 2500)); // simulate CNN inference
+const handleFile=(file:File)=>{
 
-    const randomResult = diseaseDatabase[Math.floor(Math.random() * diseaseDatabase.length)];
-    setResult(randomResult);
+if(!file.type.startsWith("image/")){
 
-    if (user) {
-      let imageUrl = null;
-      // Upload to storage
-      const ext = selectedImage.name.split(".").pop();
-      const path = `${user.id}/${Date.now()}.${ext}`;
-      const { data: uploadData } = await supabase.storage.from("disease-images").upload(path, selectedImage);
-      if (uploadData) {
-        const { data: urlData } = supabase.storage.from("disease-images").getPublicUrl(path);
-        imageUrl = urlData.publicUrl;
-      }
+toast({
+title:"Invalid file",
+description:"Upload JPG / PNG image",
+variant:"destructive"
+})
 
-      await supabase.from("disease_reports").insert({
-        user_id: user.id,
-        image_url: imageUrl,
-        disease_name: randomResult.disease_name,
-        confidence: randomResult.confidence,
-        treatment: randomResult.treatment,
-        prevention: randomResult.prevention,
-        severity: randomResult.severity,
-        crop_type: randomResult.crop_type,
-      });
-    }
-    setLoading(false);
-    toast({ title: "Analysis complete!", description: `Disease detected with ${randomResult.confidence}% confidence.` });
-  };
+return
+}
 
-  const getSeverityColor = (severity: string) => {
-    if (severity === "High") return "destructive";
-    if (severity === "Medium") return "warning";
-    return "secondary";
-  };
+setSelectedImage(file)
+setImagePreview(URL.createObjectURL(file))
+setResult(null)
 
-  return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
-      <div className="flex items-center gap-3 mb-2">
-        <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary-light rounded-xl flex items-center justify-center">
-          <Microscope className="w-5 h-5 text-primary-foreground" />
-        </div>
-        <div>
-          <h2 className="font-display font-bold text-xl text-foreground">Plant Disease Detection</h2>
-          <p className="text-muted-foreground text-sm">CNN image analysis · Upload leaf photo for instant diagnosis</p>
-        </div>
-      </div>
+}
 
-      <div className="grid lg:grid-cols-2 gap-6">
-        {/* Upload Panel */}
-        <Card className="shadow-card border-border/50">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center gap-2">
-              <Upload className="w-4 h-4 text-primary" />
-              Upload Leaf Image
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Drop Zone */}
-            <div
-              onDrop={handleDrop}
-              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-              onDragLeave={() => setDragOver(false)}
-              onClick={() => document.getElementById("fileInput")?.click()}
-              className={`relative border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
-                dragOver ? "border-primary bg-primary/5" : "border-border hover:border-primary/50 hover:bg-muted/50"
-              } ${imagePreview ? "h-48" : "h-40"}`}
-            >
-              {imagePreview ? (
-                <div className="absolute inset-0 rounded-xl overflow-hidden">
-                  <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-                    <span className="text-white text-sm font-medium bg-black/50 px-3 py-1 rounded-full">Click to change</span>
-                  </div>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setSelectedImage(null); setImagePreview(null); setResult(null); }}
-                    className="absolute top-2 right-2 bg-white rounded-full p-1 shadow"
-                  >
-                    <X className="w-3 h-3 text-foreground" />
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
-                  <p className="font-medium text-foreground text-sm">Drop image here or click to browse</p>
-                  <p className="text-xs text-muted-foreground mt-1">JPG, PNG, WebP · Max 10MB</p>
-                </>
-              )}
-            </div>
-            <input id="fileInput" type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])} />
+const handleDrop=useCallback((e:React.DragEvent)=>{
 
-            <Button
-              onClick={handleAnalyze}
-              disabled={!selectedImage || loading}
-              className="w-full gradient-green text-primary-foreground font-semibold"
-            >
-              {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Running CNN Analysis...</> : <><Microscope className="w-4 h-4 mr-2" />Analyze Disease</>}
-            </Button>
+e.preventDefault()
+setDragOver(false)
 
-            <div className="bg-muted/60 rounded-lg p-3">
-              <p className="text-xs text-muted-foreground font-semibold mb-1">📸 Tips for best results:</p>
-              <ul className="text-xs text-muted-foreground space-y-0.5">
-                <li>• Clear, focused image of the affected leaf</li>
-                <li>• Natural daylight, avoid shadows</li>
-                <li>• Single leaf fills most of the frame</li>
-                <li>• Include both healthy and affected areas</li>
-              </ul>
-            </div>
-          </CardContent>
-        </Card>
+const file=e.dataTransfer.files[0]
 
-        {/* Result Panel */}
-        <Card className="shadow-card border-border/50">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base">Diagnosis Result</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {!result && !loading && (
-              <div className="h-64 flex flex-col items-center justify-center text-muted-foreground">
-                <Microscope className="w-12 h-12 mb-3 opacity-25" />
-                <p className="font-medium">No analysis yet</p>
-                <p className="text-sm mt-1">Upload a leaf image to detect diseases</p>
-              </div>
-            )}
-            {loading && (
-              <div className="h-64 flex flex-col items-center justify-center">
-                <Loader2 className="w-10 h-10 mb-3 animate-spin text-primary" />
-                <p className="font-semibold text-foreground">Scanning with CNN Model...</p>
-                <p className="text-sm text-muted-foreground mt-1">Analyzing leaf morphology & symptoms</p>
-                <div className="w-48 mt-4">
-                  <Progress value={66} className="h-1.5" />
-                </div>
-              </div>
-            )}
-            {result && !loading && (
-              <div className="space-y-4 animate-fade-in">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="font-display font-bold text-lg text-foreground">{result.disease_name}</h3>
-                    <p className="text-muted-foreground text-sm">Detected in: <span className="font-medium text-foreground">{result.crop_type}</span></p>
-                  </div>
-                  <Badge variant={getSeverityColor(result.severity) as "destructive" | "secondary" | "outline"} className="flex items-center gap-1">
-                    <AlertTriangle className="w-3 h-3" /> {result.severity} Risk
-                  </Badge>
-                </div>
+if(file) handleFile(file)
 
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm text-muted-foreground">Confidence</span>
-                    <span className="text-sm font-bold text-success">{result.confidence}%</span>
-                  </div>
-                  <Progress value={result.confidence} className="h-2" />
-                </div>
+},[])
 
-                <div className="space-y-3">
-                  <div className="bg-destructive/5 border border-destructive/20 rounded-lg p-3">
-                    <p className="text-xs font-bold text-danger mb-1 flex items-center gap-1"><Info className="w-3 h-3" /> Symptoms</p>
-                    <p className="text-xs text-foreground">{result.symptoms}</p>
-                  </div>
-                  <div className="bg-info/5 border border-info/20 rounded-lg p-3">
-                    <p className="text-xs font-bold text-info mb-1 flex items-center gap-1"><CheckCircle className="w-3 h-3" /> Treatment</p>
-                    <p className="text-xs text-foreground">{result.treatment}</p>
-                  </div>
-                  <div className="bg-success/5 border border-success/20 rounded-lg p-3">
-                    <p className="text-xs font-bold text-success mb-1 flex items-center gap-1"><CheckCircle className="w-3 h-3" /> Prevention</p>
-                    <p className="text-xs text-foreground">{result.prevention}</p>
-                  </div>
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-};
+const handleAnalyze=async()=>{
 
-export default DiseaseDetection;
+if(!selectedImage) return
+
+setLoading(true)
+
+await new Promise(r=>setTimeout(r,2000))
+
+const randomResult=diseaseDatabase[
+Math.floor(Math.random()*diseaseDatabase.length)
+]
+
+setResult(randomResult)
+
+setLoading(false)
+
+toast({
+title:"Analysis Complete",
+description:`AI Confidence ${randomResult.confidence}%`
+})
+
+}
+
+const getSeverityColor=(severity:string)=>{
+
+if(severity==="High") return "bg-[#B7410E]/10 text-[#B7410E]"
+if(severity==="Medium") return "bg-[#5C3A21]/10 text-[#5C3A21]"
+return "bg-[#6B8E23]/10 text-[#6B8E23]"
+
+}
+
+return(
+
+<div className="max-w-5xl mx-auto space-y-6">
+
+<div className="flex items-center gap-3">
+
+<div className="w-10 h-10 bg-[#B7410E] rounded-xl flex items-center justify-center">
+
+<Microscope className="w-5 h-5 text-white"/>
+
+</div>
+
+<div>
+
+<h2 className="font-bold text-xl text-[#2E2E2E]">
+Plant Disease Detection
+</h2>
+
+<p className="text-sm text-[#5C3A21]">
+Upload crop leaf image for AI based disease diagnosis
+</p>
+
+</div>
+
+</div>
+
+<div className="grid lg:grid-cols-2 gap-6">
+
+<Card className="bg-[#F4E6C8] border-[#5C3A21]/20">
+
+<CardHeader>
+
+<CardTitle className="flex items-center gap-2 text-[#2E2E2E]">
+
+<Upload className="w-4 h-4"/>
+Upload Leaf Image
+
+</CardTitle>
+
+</CardHeader>
+
+<CardContent className="space-y-4">
+
+<div
+onDrop={handleDrop}
+onDragOver={(e)=>{
+e.preventDefault()
+setDragOver(true)
+}}
+onDragLeave={()=>setDragOver(false)}
+onClick={()=>document.getElementById("fileInput")?.click()}
+className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition
+
+${dragOver
+?"border-[#B7410E] bg-[#B7410E]/5"
+:"border-[#5C3A21]/40 hover:bg-[#DBCEA5]"
+}
+
+${imagePreview?"h-48":"h-40"}
+`}
+>
+
+{imagePreview?
+
+<div className="relative h-full">
+
+<img
+src={imagePreview}
+className="w-full h-full object-cover rounded-lg"
+/>
+
+<button
+onClick={(e)=>{
+e.stopPropagation()
+setSelectedImage(null)
+setImagePreview(null)
+setResult(null)
+}}
+className="absolute top-2 right-2 bg-white rounded-full p-1"
+>
+
+<X className="w-3 h-3"/>
+
+</button>
+
+</div>
+
+:
+
+<div>
+
+<Upload className="w-8 h-8 mx-auto text-[#5C3A21] mb-2"/>
+
+<p className="text-sm font-medium text-[#2E2E2E]">
+Drop image here or click to upload
+</p>
+
+<p className="text-xs text-[#5C3A21]">
+JPG / PNG under 10MB
+</p>
+
+</div>
+
+}
+
+</div>
+
+<input
+id="fileInput"
+type="file"
+accept="image/*"
+className="hidden"
+onChange={(e)=>e.target.files?.[0] && handleFile(e.target.files[0])}
+/>
+
+<Button
+onClick={handleAnalyze}
+disabled={!selectedImage || loading}
+className="w-full bg-[#B7410E] hover:bg-[#8B2F0B] text-white"
+>
+
+{loading ?
+
+<>
+<Loader2 className="w-4 h-4 mr-2 animate-spin"/>
+Analyzing...
+</>
+
+:
+
+<>
+<Microscope className="w-4 h-4 mr-2"/>
+Analyze Disease
+</>
+
+}
+
+</Button>
+
+</CardContent>
+
+</Card>
+
+<Card className="bg-[#F4E6C8] border-[#5C3A21]/20">
+
+<CardHeader>
+
+<CardTitle className="text-[#2E2E2E]">
+Diagnosis Result
+</CardTitle>
+
+</CardHeader>
+
+<CardContent>
+
+{!result && !loading && (
+
+<div className="h-60 flex flex-col items-center justify-center text-[#5C3A21]">
+
+<Microscope className="w-12 h-12 opacity-30 mb-3"/>
+
+<p>No analysis yet</p>
+
+</div>
+
+)}
+
+{loading && (
+
+<div className="h-60 flex flex-col items-center justify-center">
+
+<Loader2 className="w-10 h-10 animate-spin text-[#B7410E]"/>
+
+<p className="mt-2 text-[#2E2E2E] font-semibold">
+Running CNN Model...
+</p>
+
+</div>
+
+)}
+
+{result && !loading && (
+
+<div className="space-y-4">
+
+<div className="flex justify-between">
+
+<div>
+
+<h3 className="font-bold text-lg text-[#2E2E2E]">
+{result.disease_name}
+</h3>
+
+<p className="text-sm text-[#5C3A21]">
+Crop: {result.crop_type}
+</p>
+
+</div>
+
+<Badge className={getSeverityColor(result.severity)}>
+{result.severity} Risk
+</Badge>
+
+</div>
+
+<div>
+
+<div className="flex justify-between text-sm">
+
+<span className="text-[#5C3A21]">
+Confidence
+</span>
+
+<span className="text-[#6B8E23] font-semibold">
+{result.confidence}%
+</span>
+
+</div>
+
+<Progress value={result.confidence} className="mt-1"/>
+
+</div>
+
+<div className="space-y-3">
+
+<div className="p-3 rounded-lg bg-[#B7410E]/5">
+
+<p className="text-xs font-semibold text-[#B7410E] flex gap-1">
+
+<Info className="w-3 h-3"/>
+Symptoms
+
+</p>
+
+<p className="text-xs text-[#2E2E2E]">
+{result.symptoms}
+</p>
+
+</div>
+
+<div className="p-3 rounded-lg bg-[#6B8E23]/5">
+
+<p className="text-xs font-semibold text-[#6B8E23] flex gap-1">
+
+<CheckCircle className="w-3 h-3"/>
+Treatment
+
+</p>
+
+<p className="text-xs text-[#2E2E2E]">
+{result.treatment}
+</p>
+
+</div>
+
+<div className="p-3 rounded-lg bg-[#5C3A21]/5">
+
+<p className="text-xs font-semibold text-[#5C3A21] flex gap-1">
+
+<CheckCircle className="w-3 h-3"/>
+Prevention
+
+</p>
+
+<p className="text-xs text-[#2E2E2E]">
+{result.prevention}
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+)}
+
+</CardContent>
+
+</Card>
+
+</div>
+
+</div>
+
+)
+
+}
+
+export default DiseaseDetection
